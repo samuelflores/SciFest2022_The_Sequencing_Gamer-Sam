@@ -58,23 +58,32 @@ class Obstacle(pygame.sprite.Sprite):
         super().__init__()
 
         if type_of_nucleotide == 'A':
-            a_frame_1 = nucleotideSymbol('A', 'UP' )
-            self.frames = [a_frame_1]
+            a_frame_1 = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
+            x=10
+            y=10
+            width = 20
+            height=20
+            cropped_region = (x, y, width, height)
+            cropped_subsurf = a_frame_1.subsurface(cropped_region)
+            #cropped = pygame.Surface((20, 20))
+            #cropped.blit(a_frame_1, (0, 0), (30, 30, 20, 20))
+            self.frames = [cropped_subsurf]
+            #self.frames = [a_frame_1]
             y_pos = sky_height
         elif type_of_nucleotide == 'T':
-            t_frame_1 = nucleotideSymbol('T', 'UP' )
+            t_frame_1 = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
             self.frames = [t_frame_1]
             y_pos = sky_height
         elif type_of_nucleotide == 'C':
-            c_frame_1 = nucleotideSymbol('C', 'UP' )
+            c_frame_1 = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
             self.frames = [c_frame_1]
             y_pos = sky_height
         elif type_of_nucleotide == 'G':
-            g_frame_1 = nucleotideSymbol('G', 'UP' )
+            g_frame_1 = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
             self.frames = [g_frame_1]
             y_pos = sky_height
         else:
-            n_frame_1 = nucleotideSymbol('N', 'UP' )
+            n_frame_1 = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
             self.frames = [n_frame_1]
             y_pos = sky_height
 
@@ -96,23 +105,9 @@ class Obstacle(pygame.sprite.Sprite):
 def collision_sprite(k_mer_start):
     k_mer_start2 = k_mer_start
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, True):
-        sequence.append(nucleotides[-3]) # I think this is the nucleotide that is at the right distance to collide. Third from latest, since nucleotides come in from right
-        #myCount=0
-        #for mySprite in obstacle_group.sprites():
-        #    mySprite.rect.y= myCount*100
-        #    myCount += 1
-        #obstacle_group.sprites()[  1          ].rect.y = 100
-        #pygame.display.update() #pygame.time.wait(1000) 
-        #pygame.time.wait( 500) 
-
-        print ('num sprites in group: '  ,len(obstacle_group.sprites())  )
-
-        obstacle_group.remove() # Not clear to me, but sounds like it should remove the latest obstacle. But commenting it out actually makes no difference, and removal seems automatic for the spritecollide method
+        sequence.append(nucleotides[-3])
+        obstacle_group.remove()
         k_mer_start2 = k_mer_start2 + 1
-        display_score(1,nucleotides[-3])
-        pygame.display.update() 
-        pygame.time.delay( 500) # 
-          
         return True, k_mer_start2
     else:
         score_seq = 0
@@ -127,136 +122,25 @@ def collision_sprite(k_mer_start):
             return False, result_of_sequencing
         return True, k_mer_start2
 
-def nucleotideSymbol(singleLetterCode, notchDirection ):
-    BLACK = (0, 0, 0)
-    WHITE = (255,255,255)
-    YELLOW= (255,255,0  )
-    BLUE  = (0  ,0  ,255)
-    RED   = (255,0  ,0  )
-    GREEN = (0  ,255,0  )
-    #pygame.font.init()
-    my_font = pygame.font.SysFont('Comic Sans MS', 80)
-    myShapeSurf = pygame.Surface((100, 150)) 
-    if notchDirection == 'DOWN':
-        rectangYOffset=0
-        notchYOffset=0
-        textYOffset = 0
-    if notchDirection == 'UP':
-        rectangYOffset=50
-        notchYOffset=-100
-        textYOffset = 50
-    if singleLetterCode == 'G' : 
-        pygame.draw.rect(myShapeSurf ,BLUE ,pygame.Rect(0,0,100,150))
-        myCircleSurf = pygame.Surface((100, 150))
-        if notchDirection == 'DOWN':
-            pygame.draw.circle(myCircleSurf ,WHITE,(50,150),50)                 
-        elif notchDirection == 'UP':
-            pygame.draw.circle(myCircleSurf ,WHITE,(50,  0),50)                 
-        myShapeSurf.blit(myCircleSurf,(0,0),special_flags=1        )  # special_flags=1 means add. Should now be a black rectang notched with a white half-moon
-    elif singleLetterCode == 'C' :
-        myShapeSurf.fill(WHITE)
-        pygame.draw.rect(myShapeSurf ,RED  ,pygame.Rect(0,rectangYOffset,100,100))
-        if notchDirection == 'DOWN':
-            pygame.draw.circle(myShapeSurf ,RED  ,(50,100),50)                 
-        elif notchDirection == 'UP':
-            pygame.draw.circle(myShapeSurf ,RED  ,(50, 50),50)                 
-    elif singleLetterCode == 'T' :
-        myShapeSurf.fill(WHITE)
-        pygame.draw.rect(myShapeSurf ,GREEN,pygame.Rect(0,0+rectangYOffset,100,100))
-        pygame.draw.rect(myShapeSurf ,GREEN,pygame.Rect(25,100+notchYOffset, 50, 50))
-    elif singleLetterCode == 'A' :
-        myShapeSurf.fill(WHITE)
-        pygame.draw.rect(myShapeSurf ,BLACK,pygame.Rect(0,0+rectangYOffset,100,100))
-        pygame.draw.rect(myShapeSurf ,BLACK,pygame.Rect( 0,100+notchYOffset, 25, 50))
-        pygame.draw.rect(myShapeSurf ,BLACK,pygame.Rect(75,100+notchYOffset, 25, 50))
-    elif singleLetterCode == 'N' :
-        myShapeSurf.fill(WHITE)
-        pygame.draw.rect(myShapeSurf ,BLACK,pygame.Rect(0,0+rectangYOffset,100,100))
-        #pygame.draw.rect(myShapeSurf ,GREEN,pygame.Rect(25,100+notchYOffset, 50, 50))
 
-    myShapeMask = pygame.mask.from_surface(myShapeSurf )
-    mySurf = pygame.Surface((100, 150),pygame.SRCALPHA, 32) #, masks=myShapeMask )
-    mySurf.fill(BLACK        )
-    mySurf.set_colorkey(WHITE)
-    mySurf.blit(myShapeSurf,(0,0),special_flags=1 ) #add notched rectang
-    mySurf.set_alpha(250)
-    letterPosition = (17,-10+textYOffset)
-    fontColor = WHITE
-    letter = my_font.render(singleLetterCode, True, (fontColor))
-    mySurf.blit(letter,letterPosition)
-    return mySurf   
-
-def winSound():
-        winnerSound = pygame.mixer.Sound('audio/winner-bell.aiff')
-        winnerSound.set_volume(2)
-        winnerSound.play()
-def loseSound():
-        loseSound1 = pygame.mixer.Sound('audio/bad-beep.mp3')
-        loseSound1.set_volume(8)
-        loseSound1.play()
-
-def display_score(showComplement,collidedNucleotide):
-    #winSound()
-    #pygame.time.wait(1000) 
+def display_score():
     k_mer_start2 = collision_sprite(k_mer_start)[1]
     k_mer = sequence_obj[k_mer_start2]
     score_surf = k_mer_font.render(f'Nucleotide:', False, (64, 64, 64))
     score_rect = score_surf.get_rect(center=(SCREEN_WIDTH / 2, 100))
     screen.blit(score_surf, score_rect)
 
-    BLACK = (0, 0, 0)
-    WHITE = (255,255,255)
-    YELLOW= (255,255,0  )
-    BLUE  = (0  ,0  ,255)
-    pygame.font.init()
-    my_font = pygame.font.SysFont('Comic Sans MS', 80)
-    myShapeSurf = pygame.Surface((100, 150)) 
-    pygame.draw.rect(myShapeSurf ,BLACK,pygame.Rect(0,0,100,150))
-    myCircleSurf = pygame.Surface((100, 150)) 
-    pygame.draw.circle(myCircleSurf ,WHITE,(50,150),50)                 
-    myShapeSurf.blit(myCircleSurf,(0,0),special_flags=1        )  # special_flags=1 means add. Should now be a black rectang notched with a white half-moon
-    myShapeMask = pygame.mask.from_surface(myShapeSurf )
-    mySurf = pygame.Surface((100, 150),pygame.SRCALPHA, 32) #, masks=myShapeMask )
-    mySurf.fill(BLACK        )
-    mySurf.set_colorkey(WHITE)
-    mySurf.blit(myShapeSurf,(0,0),special_flags=1 ) #add notched rectang
-    mySurf.set_alpha(250)
-    letterPosition = (17,-10)
-    fontColor = WHITE
-    KMERcomplement = nucleotideSymbol(collidedNucleotide, 'UP')
     if k_mer == 'A':
-        KMER = nucleotideSymbol('A', 'DOWN')
-        if collidedNucleotide != 'T':
-            KMERcomplement = nucleotideSymbol('X', 'UP')
-            if showComplement: loseSound()
-        else: winSound()
+        KMER = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
+        cropped = pygame.Surface((20, 20))
+        cropped.blit(KMER, (0, 0), (30, 30, 20, 20))
     elif k_mer == 'T':
-        KMER = nucleotideSymbol('T','DOWN')
-        #KMERcomplement = nucleotideSymbol('A', 'UP')
-        if collidedNucleotide != 'A':
-            #KMERcomplement = nucleotideSymbol('X', 'UP')
-            if showComplement: loseSound()
-            #loseSound()
-        else: winSound()
+        KMER = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
     elif k_mer == 'C':
-        KMER = nucleotideSymbol('C','DOWN')
-        #KMERcomplement = nucleotideSymbol('G', 'UP')
-        if collidedNucleotide != 'G':
-            #KMERcomplement = nucleotideSymbol('X', 'UP')
-            if showComplement: loseSound()
-            #loseSound()
-        else: winSound()
+        KMER = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
     else:
-        KMER = nucleotideSymbol('G','DOWN')
-        # KMERcomplement = nucleotideSymbol('C', 'UP')
-        if collidedNucleotide != 'C':
-            #KMERcomplement = nucleotideSymbol('X', 'UP')
-            if showComplement: loseSound()
-            #loseSound()
-        else: winSound()
+        KMER = pygame.image.load('graphics/nucleotides/GU.png').convert_alpha()
     screen.blit(KMER,((SCREEN_WIDTH / 4)*3 - 10, 40))
-    if showComplement :
-        screen.blit(KMERcomplement,((SCREEN_WIDTH / 4)*3 - 10, 40+100))
     return k_mer
 
 
@@ -276,7 +160,7 @@ bg_music = pygame.mixer.Sound('audio/music.wav')
 bg_music.play(loops=-1)
 
 # Background
-sky_surf = pygame.image.load('graphics/Sky2.png').convert()
+sky_surf = pygame.image.load('graphics/Sky.png').convert()
 sky_width = sky_surf.get_width()
 sky_height = sky_surf.get_height()
 ground_surf = pygame.image.load('graphics/ground.png').convert()
@@ -344,8 +228,8 @@ while True:
         if game_active:
             nucleotide = choice(['A', 'T', 'C', 'G', 'N'])
             if event.type == obstacle_timer:
-                nucleotides.append(nucleotide) # array of single letters
-                obstacle_group.add(Obstacle(nucleotides[-1])) # obstacle_group is some sort of array which keeps getting sprites(obstacles)       appended
+                nucleotides.append(nucleotide)
+                obstacle_group.add(Obstacle(nucleotides[-1]))
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
@@ -361,9 +245,9 @@ while True:
             scroll = 0
 
         # score
-        score = display_score(0,'Nothing')
+        score = display_score()
 
-        # player # Appear to be hard coded into single player mode
+        # player
         player.draw(screen)
         player.update()
 
@@ -372,8 +256,7 @@ while True:
         obstacle_group.update()
 
         # collisions
-        #  collision_sprite returns bool, int(k_mer_start2) . k_mer_start2 appears to be a sequence residue number which is incrementing.
-        k_mer_start = collision_sprite(k_mer_start)[1] # k_mer_start is an int, starts as 0 # sprites are game objects with actions
+        k_mer_start = collision_sprite(k_mer_start)[1]
         game_active = collision_sprite(k_mer_start)[0]
 
     else:
