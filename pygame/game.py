@@ -99,6 +99,13 @@ def collision_sprite(k_mer_start):
         sequence.append(nucleotides[-3])
         obstacle_group.remove()
         k_mer_start2 = k_mer_start2 + 1
+        print ("len(nucleotides) " , len(nucleotides), "nucleotides = ", nucleotides )
+        #if len(nucleotides) == 1:  # this case should only be necessary if the sequence from the dictionary is very short, which will probably not happen.
+        #    display_complement(nucleotides[-1])
+        #elif len(nucleotides) == 2: # same for this case.
+        #    display_complement(nucleotides[-2])
+        #elif len(nucleotides) >  2:
+        #    display_complement(nucleotides[-3])
         return True, k_mer_start2
     else:
         score_seq = 0
@@ -113,14 +120,23 @@ def collision_sprite(k_mer_start):
             return False, result_of_sequencing
         return True, k_mer_start2
 
+def display_complement( collidedNucleotide	):
+    if collidedNucleotide == 'A':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A2.png').convert_alpha()    
+    else:
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/T2.png').convert_alpha()    
+    screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100))
+    pygame.display.update() 
+    pygame.time.delay(250)
+        
 
-def display_score():
+def display_score(	):
     k_mer_start2 = collision_sprite(k_mer_start)[1]
     k_mer = sequence_obj[k_mer_start2]
     score_surf = k_mer_font.render(f'Nucleotide:', False, (64, 64, 64))
     score_rect = score_surf.get_rect(center=(SCREEN_WIDTH / 2, 100))
     screen.blit(score_surf, score_rect)
-
+        
     if k_mer == 'A':
         KMER = pygame.image.load('graphics/nucleotides/A2.png').convert_alpha()
     elif k_mer == 'T':
@@ -166,6 +182,22 @@ obstacle_group = pygame.sprite.Group()
 # we don't want to add obstacles if the timer is not running so obstacle_group.add(Obstacle(...)) will be used after
 # Sequence count
 sequence = []
+OLDsequence_dictionary = {
+    'Felis catus (Domestic cat)':
+        '''CTGGAGAAGGAGGGCAGGGCCAGAAGCCAAGTCTGAAGGAAGGAACTTCCAGCCAATGAAAGGGGAACTG''',
+    'Canis lupus familiaris (Dog - Labrador retriever)':
+        '''AATATAAGGGAATGGAGAAGAATTGTGTAGGAAATATCAGAAAGGGAGACAGAACATAAAGACTCCTAAC''',
+    'Elephas maximus (Asiatic elephant)':
+        '''ATGTGTTAAATGTGCCCTTTTCCTTCCACTCAAATACTGGTTAAAGCATGAATTCTAGGAAAGGAAGTTT''',
+    'Escherichia coli (Bacteria)':
+        '''GCATCGAATGGGCTCATCATTAATCGGTATCGGAATCAGGAGAATTTATAATGGCTTACAGCGAAAAAGT''',
+    'SARS-CoV-2 (Coronavirus)':
+        '''GAAGACATTCAACTTCTTAAGAGTGCTTATGAAAATTTTAATCAGCACGAAGTTCTACTTGCACCATTAT''',
+    'Cantharellus cibarius (chanterelle)':
+        '''AATGGCTTCTAGTCCGGCATGATCCACCCTATGAGCATCGGTGATCACAACAGAGTTGCTGGGGGCAGGT''',
+    'Salmo salar (Salmon)':
+        '''TATTTATTTTTATCCAAAAATCACAGCTGGAGTGCGATGGCGCCTTCCTGGGTGTCGGGTATGGTCGATG'''
+}
 sequence_dictionary = {
     'Felis catus (Domestic cat)':
         '''CTGGAGAAGGAGGGCAGGGCCAGAAGCCAAGTCTGAAGGAAGGAACTTCCAGCCAATGAAAGGGGAACTG''',
@@ -185,6 +217,7 @@ sequence_dictionary = {
 organisms = sequence_dictionary.keys()
 sequence_organism = random.choice(list(sequence_dictionary.keys()))
 random_length_of_sequence = randint(15, 30)
+random_length_of_sequence = randint(  5,7 ) # Sam wants a short sequence for debugging
 random_start = randint(0, 70 - random_length_of_sequence)
 sequence_obj = str(sequence_dictionary[sequence_organism][random_start:random_start + random_length_of_sequence])
 
@@ -234,7 +267,7 @@ while True:
             scroll = 0
 
         # score
-        score = display_score()
+        score = display_score() 
 
         # player
         player.draw(screen)
