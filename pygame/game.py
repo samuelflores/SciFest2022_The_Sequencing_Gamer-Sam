@@ -95,17 +95,20 @@ class Obstacle(pygame.sprite.Sprite):
 
 def collision_sprite(k_mer_start):
     k_mer_start2 = k_mer_start
+    #print ("1 k_mer_start2 ",   k_mer_start2)
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, True):
         sequence.append(nucleotides[-3])
         obstacle_group.remove()
         k_mer_start2 = k_mer_start2 + 1
-        print ("len(nucleotides) " , len(nucleotides), "nucleotides = ", nucleotides )
-        #if len(nucleotides) == 1:  # this case should only be necessary if the sequence from the dictionary is very short, which will probably not happen.
-        #    display_complement(nucleotides[-1])
-        #elif len(nucleotides) == 2: # same for this case.
-        #    display_complement(nucleotides[-2])
-        #elif len(nucleotides) >  2:
-        #    display_complement(nucleotides[-3])
+        #print ("2 k_mer_start2 ",   k_mer_start2)
+        #print ("len(nucleotides) " , len(nucleotides), "nucleotides = ", nucleotides )
+        if len(nucleotides) == 1:  # this case should only be necessary if the sequence from the dictionary is very short, which will probably not happen.
+            display_complement(nucleotides[-1])
+        elif len(nucleotides) == 2: # same for this case.
+            display_complement(nucleotides[-2])
+        elif len(nucleotides) >  2:
+            display_complement(nucleotides[-3])
+        #print ("3 k_mer_start2 ",   k_mer_start2)
         return True, k_mer_start2
     else:
         score_seq = 0
@@ -118,15 +121,54 @@ def collision_sprite(k_mer_start):
             result_of_sequencing = score_seq * 100 / len(sequence_obj)
             score = 1
             return False, result_of_sequencing
+        #print ("4 k_mer_start2 ",   k_mer_start2)
         return True, k_mer_start2
 
+def winSound():
+    winnerSound = pygame.mixer.Sound('audio/winner-bell.aiff')
+    winnerSound.set_volume(2)
+    winnerSound.play()
+def loseSound():
+    loseSound1 = pygame.mixer.Sound('audio/bad-beep.mp3')
+    loseSound1.set_volume(8)
+    loseSound1.play()
+
+
 def display_complement( collidedNucleotide	):
-    if collidedNucleotide == 'A':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A2.png').convert_alpha()    
-    else:
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/T2.png').convert_alpha()    
-    screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100))
+    if   collidedNucleotide == 'A':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A.png').convert_alpha()    
+    elif collidedNucleotide == 'T':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/T.png').convert_alpha()    
+    elif collidedNucleotide == 'G':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/G.png').convert_alpha()    
+        collidedNucleotideGraphic = pygame.transform.flip(collidedNucleotideGraphic,1,0)
+    elif collidedNucleotide == 'C':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/C.png').convert_alpha()    
+        collidedNucleotideGraphic = pygame.transform.flip(collidedNucleotideGraphic,1,0)
+    elif collidedNucleotide == 'N':
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/N.png').convert_alpha()    
+    screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100 -20))
     pygame.display.update() 
+    #print ("k_mer_start ", k_mer_start)
+    myk_mer_start2 = collision_sprite(k_mer_start)[1]
+    #print ("myk_mer_start2 ", myk_mer_start2)
+    if collision_sprite(k_mer_start)[0] : # if indeed there was a collision
+        myk_mer = sequence_obj[myk_mer_start2]
+        if dictionary_nucleotides[myk_mer] == collidedNucleotide :
+            winSound()
+        else :
+            loseSound()
+    #if myk_mer == 'A':
+    #    KMER = pygame.image.load('graphics/nucleotides/A2.png').convert_alpha()
+    #elif myk_mer == 'T':
+    #    KMER = pygame.image.load('graphics/nucleotides/T2.png').convert_alpha()
+    #elif myk_mer == 'C':
+    #    KMER = pygame.image.load('graphics/nucleotides/C2.png').convert_alpha()
+    #else:
+    #    KMER = pygame.image.load('graphics/nucleotides/G2.png').convert_alpha()
+
+
+
     pygame.time.delay(250)
         
 
