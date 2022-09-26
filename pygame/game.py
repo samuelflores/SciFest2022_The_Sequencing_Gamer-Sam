@@ -95,20 +95,22 @@ class Obstacle(pygame.sprite.Sprite):
 
 def collision_sprite(k_mer_start):
     k_mer_start2 = k_mer_start
-    #print ("1 k_mer_start2 ",   k_mer_start2)
+    #   print ("1 k_mer_start2 ",   k_mer_start2)
     if pygame.sprite.spritecollide(player.sprite, obstacle_group, True):
         sequence.append(nucleotides[-3])
         obstacle_group.remove()
         k_mer_start2 = k_mer_start2 + 1
-        #print ("2 k_mer_start2 ",   k_mer_start2)
-        #print ("len(nucleotides) " , len(nucleotides), "nucleotides = ", nucleotides )
-        if len(nucleotides) == 1:  # this case should only be necessary if the sequence from the dictionary is very short, which will probably not happen.
+        #   print ("2 k_mer_start2 ",   k_mer_start2)
+        #   print ("len(nucleotides) " , len(nucleotides), "nucleotides = ", nucleotides )
+        if len(nucleotides) == 1:
+            #  this case should only be necessary if the sequence from the dictionary is very short,
+            #  which will probably not happen.
             display_complement(nucleotides[-1])
-        elif len(nucleotides) == 2: # same for this case.
+        elif len(nucleotides) == 2:  # same for this case.
             display_complement(nucleotides[-2])
-        elif len(nucleotides) >  2:
+        elif len(nucleotides) > 2:
             display_complement(nucleotides[-3])
-        #print ("3 k_mer_start2 ",   k_mer_start2)
+        #   print ("3 k_mer_start2 ",   k_mer_start2)
         return True, k_mer_start2
     else:
         score_seq = 0
@@ -121,7 +123,7 @@ def collision_sprite(k_mer_start):
             result_of_sequencing = score_seq * 100 / len(sequence_obj)
             score = 1
             return False, result_of_sequencing
-        #print ("4 k_mer_start2 ",   k_mer_start2)
+        #   print ("4 k_mer_start2 ",   k_mer_start2)
         return True, k_mer_start2
 
 def winSound():
@@ -134,7 +136,7 @@ def loseSound():
     loseSound1.play()
 
 
-def display_complement( collidedNucleotide	):
+def display_complement(collidedNucleotide):
     if   collidedNucleotide == 'A':
         collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A.png')
         screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 100 - 20))
@@ -143,20 +145,20 @@ def display_complement( collidedNucleotide	):
         screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 100 - 20))
     elif collidedNucleotide == 'G':
         collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/G2.png')
-        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50 ))
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50))
     elif collidedNucleotide == 'C':
         collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/C.png')
-        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50 ))
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50))
     elif collidedNucleotide == 'N':
         collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/N.png')
-        screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100 -20))
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4)*3 - 10, 40 + 100 - 20))
     pygame.display.update() 
-    #print ("k_mer_start ", k_mer_start)
+    #   print ("k_mer_start ", k_mer_start)
     myk_mer_start2 = collision_sprite(k_mer_start)[1]
-    #print ("myk_mer_start2 ", myk_mer_start2)
-    if collision_sprite(k_mer_start)[0] : # if indeed there was a collision
+    #   print ("myk_mer_start2 ", myk_mer_start2)
+    if collision_sprite(k_mer_start)[0]:  # if indeed there was a collision
         myk_mer = sequence_obj[myk_mer_start2]
-        if dictionary_nucleotides[myk_mer] == collidedNucleotide :
+        if dictionary_nucleotides[myk_mer] == collidedNucleotide:
             winSound()
         else :
             loseSound()
@@ -167,7 +169,7 @@ def display_complement( collidedNucleotide	):
     pygame.time.delay(250)
         
 
-def display_score(	):
+def display_score():
     k_mer_start2 = collision_sprite(k_mer_start)[1]
     k_mer = sequence_obj[k_mer_start2]
     score_surf = k_mer_font.render(f'Nucleotide:', False, (64, 64, 64))
@@ -182,7 +184,7 @@ def display_score(	):
         KMER = pygame.image.load('graphics/nucleotides/C2.png').convert_alpha()
     else:
         KMER = pygame.image.load('graphics/nucleotides/G.png').convert_alpha()
-    screen.blit(KMER,((SCREEN_WIDTH / 4)*3 - 10, 40))
+    screen.blit(KMER, ((SCREEN_WIDTH / 4)*3 - 10, 40))
     return k_mer
 
 
@@ -219,22 +221,6 @@ obstacle_group = pygame.sprite.Group()
 # we don't want to add obstacles if the timer is not running so obstacle_group.add(Obstacle(...)) will be used after
 # Sequence count
 sequence = []
-OLDsequence_dictionary = {
-    'Felis catus (Domestic cat)':
-        '''CTGGAGAAGGAGGGCAGGGCCAGAAGCCAAGTCTGAAGGAAGGAACTTCCAGCCAATGAAAGGGGAACTG''',
-    'Canis lupus familiaris (Dog - Labrador retriever)':
-        '''AATATAAGGGAATGGAGAAGAATTGTGTAGGAAATATCAGAAAGGGAGACAGAACATAAAGACTCCTAAC''',
-    'Elephas maximus (Asiatic elephant)':
-        '''ATGTGTTAAATGTGCCCTTTTCCTTCCACTCAAATACTGGTTAAAGCATGAATTCTAGGAAAGGAAGTTT''',
-    'Escherichia coli (Bacteria)':
-        '''GCATCGAATGGGCTCATCATTAATCGGTATCGGAATCAGGAGAATTTATAATGGCTTACAGCGAAAAAGT''',
-    'SARS-CoV-2 (Coronavirus)':
-        '''GAAGACATTCAACTTCTTAAGAGTGCTTATGAAAATTTTAATCAGCACGAAGTTCTACTTGCACCATTAT''',
-    'Cantharellus cibarius (chanterelle)':
-        '''AATGGCTTCTAGTCCGGCATGATCCACCCTATGAGCATCGGTGATCACAACAGAGTTGCTGGGGGCAGGT''',
-    'Salmo salar (Salmon)':
-        '''TATTTATTTTTATCCAAAAATCACAGCTGGAGTGCGATGGCGCCTTCCTGGGTGTCGGGTATGGTCGATG'''
-}
 sequence_dictionary = {
     'Felis catus (Domestic cat)':
         '''CTGGAGAAGGAGGGCAGGGCCAGAAGCCAAGTCTGAAGGAAGGAACTTCCAGCCAATGAAAGGGGAACTG''',
@@ -254,7 +240,7 @@ sequence_dictionary = {
 organisms = sequence_dictionary.keys()
 sequence_organism = random.choice(list(sequence_dictionary.keys()))
 random_length_of_sequence = randint(15, 30)
-random_length_of_sequence = randint(  5,7 ) # Sam wants a short sequence for debugging
+#random_length_of_sequence = randint(5, 7)  # Sam wants a short sequence for debugging
 random_start = randint(0, 70 - random_length_of_sequence)
 sequence_obj = str(sequence_dictionary[sequence_organism][random_start:random_start + random_length_of_sequence])
 
@@ -341,8 +327,8 @@ while True:
         score_message_rect = score_message.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2))
         score_message2 = test_font.render(f'{statement}', False, (111, 196, 169))
         score_message3 = test_font.render(f'{statement2}', False, (111, 196, 169))
-        score_message_rect2 = score_message.get_rect(center=(SCREEN_WIDTH / 3, SCREEN_HEIGHT / 1.2 + 30))
-        score_message_rect3 = score_message.get_rect(center=(SCREEN_WIDTH / 3, SCREEN_HEIGHT / 1.2 + 60))
+        score_message_rect2 = score_message.get_rect(center=(SCREEN_WIDTH / 3 + 150, SCREEN_HEIGHT / 1.2 + 30))
+        score_message_rect3 = score_message.get_rect(center=(SCREEN_WIDTH / 3 + 150, SCREEN_HEIGHT / 1.2 + 60))
         screen.blit(title_surf, title_rect)
 
         if result == 0:
