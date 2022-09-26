@@ -70,7 +70,7 @@ class Obstacle(pygame.sprite.Sprite):
             self.frames = [c_frame_1]
             y_pos = sky_height
         elif type_of_nucleotide == 'G':
-            g_frame_1 = pygame.image.load('graphics/nucleotides/G.png').convert_alpha()
+            g_frame_1 = pygame.image.load('graphics/nucleotides/G2.png').convert_alpha()
             self.frames = [g_frame_1]
             y_pos = sky_height
         else:
@@ -136,18 +136,20 @@ def loseSound():
 
 def display_complement( collidedNucleotide	):
     if   collidedNucleotide == 'A':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A.png').convert_alpha()    
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/A.png')
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 100 - 20))
     elif collidedNucleotide == 'T':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/T.png').convert_alpha()    
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/T.png')
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 100 - 20))
     elif collidedNucleotide == 'G':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/G.png').convert_alpha()    
-        collidedNucleotideGraphic = pygame.transform.flip(collidedNucleotideGraphic,1,0)
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/G2.png')
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50 ))
     elif collidedNucleotide == 'C':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/C.png').convert_alpha()    
-        collidedNucleotideGraphic = pygame.transform.flip(collidedNucleotideGraphic,1,0)
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/C.png')
+        screen.blit(collidedNucleotideGraphic, ((SCREEN_WIDTH / 4) * 3 - 10, 40 + 50 ))
     elif collidedNucleotide == 'N':
-        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/N.png').convert_alpha()    
-    screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100 -20))
+        collidedNucleotideGraphic = pygame.image.load('graphics/nucleotides/N.png')
+        screen.blit(collidedNucleotideGraphic,((SCREEN_WIDTH / 4)*3 - 10, 40 + 100 -20))
     pygame.display.update() 
     #print ("k_mer_start ", k_mer_start)
     myk_mer_start2 = collision_sprite(k_mer_start)[1]
@@ -158,14 +160,7 @@ def display_complement( collidedNucleotide	):
             winSound()
         else :
             loseSound()
-    #if myk_mer == 'A':
-    #    KMER = pygame.image.load('graphics/nucleotides/A2.png').convert_alpha()
-    #elif myk_mer == 'T':
-    #    KMER = pygame.image.load('graphics/nucleotides/T2.png').convert_alpha()
-    #elif myk_mer == 'C':
-    #    KMER = pygame.image.load('graphics/nucleotides/C2.png').convert_alpha()
-    #else:
-    #    KMER = pygame.image.load('graphics/nucleotides/G2.png').convert_alpha()
+
 
 
 
@@ -186,7 +181,7 @@ def display_score(	):
     elif k_mer == 'C':
         KMER = pygame.image.load('graphics/nucleotides/C2.png').convert_alpha()
     else:
-        KMER = pygame.image.load('graphics/nucleotides/G2.png').convert_alpha()
+        KMER = pygame.image.load('graphics/nucleotides/G.png').convert_alpha()
     screen.blit(KMER,((SCREEN_WIDTH / 4)*3 - 10, 40))
     return k_mer
 
