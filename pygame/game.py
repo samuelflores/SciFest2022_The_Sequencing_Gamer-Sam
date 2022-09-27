@@ -266,6 +266,10 @@ player_stand_rect = player_stand.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGH
 
 title_surf = test_font.render('Pyquencing Runner', False, (111, 196, 169))
 title_rect = title_surf.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 5))
+auth_surf = test_font.render('Written by Valeriia Ladyhina with a little help from Samuel Flores', False, (111, 196, 169))
+auth_rect =  auth_surf.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT *.3))
+SLU_surf = test_font.render('At the Sweet-ish University of Eggycultural Sciences (SLU), Uppsala, Sweden', False, (111, 196, 169))
+SLU_rect =   SLU_surf.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT *.35))
 
 caption_surf = test_font.render('Are you ready? Good luck and press space to start', False, (111, 196, 169))
 caption_rect = caption_surf.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 1.2))
@@ -347,6 +351,8 @@ while True:
         score_message_rect3 = score_message.get_rect(center=(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 1.2 + 60))
         score_message_rect4 = score_message.get_rect(center=(SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 1.2 + 90))
         screen.blit(title_surf, title_rect)
+        screen.blit( auth_surf,  auth_rect)
+        screen.blit(  SLU_surf,   SLU_rect)
 
         if result == 0:
             screen.blit(caption_surf, caption_rect)
